@@ -1,6 +1,6 @@
 {
-  "name": "@waterly/waterlyconnect-nodejs-client",
-  "version": "0.0.1",
+  "name": "@waterclick/waterlyconnect-nodejs-client",
+  "version": "0.0.2",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.mjs",
   "types": "lib/types/index.d.ts",
