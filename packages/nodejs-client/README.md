@@ -3,13 +3,13 @@
 ## Installation
 
 ```
-yarn add @waterly/waterlyconnect-nodejs-client
+yarn add @waterclick/waterlyconnect-nodejs-client
 ```
 
 ## Usage
 
 ```typescript
-import { TagDatum, WaterlyConnectApiClient } from "@waterly/waterlyconnect-nodejs-client";
+import { TagDatum, WaterlyConnectApiClient } from "@waterclick/waterlyconnect-nodejs-client";
 
 // Note that timestamps must be in *seconds* since the epoch, not milliseconds
 const data: TagDatum[] = [
