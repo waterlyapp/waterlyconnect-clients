@@ -1,2 +1,2 @@
 export { WaterlyConnectApiClient, WaterlyConnectApiClientConfig } from "./client";
-export * from "./models";
+export { ClientDeviceInfo, TagDatum } from "./models";
