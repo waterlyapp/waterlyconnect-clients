@@ -8,4 +8,4 @@ The official OpenAPI definition for the service is maintained [here](https://git
 
 ## Current Implementations
 
-* [NodeJS and Browser environments](./packages/nodejs-client/README.md)
+* [NodeJS environments](./packages/nodejs-client/README.md)
