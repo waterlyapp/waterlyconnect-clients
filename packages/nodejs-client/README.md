@@ -57,17 +57,16 @@ c.submitData(data)
 
 #### `constructor`
 
-The `WaterlyConnectApiClient` requires one argument: an object of `WaterlyConnectApiClientConfig`. Please see the type
+The `WaterlyConnectApiClient` constructor requires one argument: an object of `WaterlyConnectApiClientConfig`. Please see the type
 documentation below for specifics of how it may be configured.
 
 #### `submitData`
 
-`submitData` is an async method with a `void` value. You must resolve calls to function with either `then()/catch()`
+`submitData` is an async method with a `Promise<void>` return value. You must resolve calls to function with either `then()/catch()`
 syntax or `async/await`.
 
 This function will **throw an error** that you must catch in your code if data was unable to be accepted by the
-WaterlyConnect service for any reason,
-or will complete silently when successful.
+WaterlyConnect service for any reason, or will complete silently when successful.
 
 ---
 
