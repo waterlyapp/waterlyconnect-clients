@@ -6,7 +6,7 @@ from com.inductiveautomation.ignition.common.model.values import QualityCode
 # ==========================================
 # Configuration:
 # ==========================================
-waterly_api_url = "https://app.dev.waterlyapp.com/connect/submit"
+waterly_api_url = "https://app.waterlyapp.com/connect/submit"
 waterly_device_id = '<WATERLY_DEVICE_ID>'
 waterly_device_token = "<WATERLY_DEVICE_TOKEN>"
 
