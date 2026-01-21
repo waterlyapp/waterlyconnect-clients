@@ -9,3 +9,4 @@ The official OpenAPI definition for the service is maintained [here](https://git
 ## Current Implementations
 
 * [NodeJS environments](./packages/nodejs-client/README.md)
+* [PowerShell environments](./packages/powershell-client/README.md)
