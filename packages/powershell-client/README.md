@@ -6,7 +6,7 @@ You will need 3 specific values provided by the Waterly team to proceed:
 
 - `url`: The endpoint URL to submit data to
 - `clientToken`: The client "secret" for the API client
-- `clientDeviceId`: A unique identifier for the API client
+- `clientDevice`: A device object with `id` and `type` fields (see `New-WaterlyConnectDeviceInfo`)
 
 ---
 
@@ -23,9 +23,9 @@ Import-Module ./WaterlyConnect.psm1
 
 $clientDevice = New-WaterlyConnectDeviceInfo -Id "my-fancy-device" -Type "SCADACo"
 
-$client = New-WaterlyConnectApiClient \
-  -Url "https://foo.bar/connect/submit" \
-  -ClientToken "abcpdqxyz123" \
+$client = New-WaterlyConnectApiClient `
+  -Url "https://foo.bar/connect/submit" `
+  -ClientToken "abcpdqxyz123" `
   -ClientDevice $clientDevice
 
 $tagInputs = @(
@@ -34,9 +34,9 @@ $tagInputs = @(
 )
 
 $tags = foreach ($tag in $tagInputs) {
-  New-WaterlyConnectTagDatum \
-    -Name $tag.Name \
-    -Value $tag.Value \
+  New-WaterlyConnectTagDatum `
+    -Name $tag.Name `
+    -Value $tag.Value `
     -LastChangeTimestamp ([int][DateTimeOffset]::UtcNow.ToUnixTimeSeconds())
 }
 
@@ -52,9 +52,9 @@ Use any data source and build tag data in a loop before submitting:
 ```powershell
 $tags = @()
 foreach ($row in $dataRows) {
-  $tags += New-WaterlyConnectTagDatum \
-    -Name $row.TagName \
-    -Value $row.Value \
+  $tags += New-WaterlyConnectTagDatum `
+    -Name $row.TagName `
+    -Value $row.Value `
     -LastChangeTimestamp $row.TimestampSeconds
 }
 
@@ -83,6 +83,7 @@ Builds the device info payload (`id` and `type` are required).
 ### `New-WaterlyConnectTagDatum`
 
 Builds a tag datum payload (`name`, `value`, and `last_change_timestamp` are required).
+Numeric values are formatted using invariant culture so decimal separators are always `.`.
 
 ### `WaterlyConnectApiClient.SubmitData(tags)`
 

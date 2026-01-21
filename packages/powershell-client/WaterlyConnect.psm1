@@ -54,9 +54,18 @@ function New-WaterlyConnectTagDatum {
     [string]$Unit
   )
 
+  $valueString = ""
+  if ($null -ne $Value) {
+    if (($Value -is [System.IFormattable]) -and -not ($Value -is [string])) {
+      $valueString = $Value.ToString($null, [System.Globalization.CultureInfo]::InvariantCulture)
+    } else {
+      $valueString = [string]$Value
+    }
+  }
+
   $tag = [ordered]@{
     name = $Name
-    value = if ($null -eq $Value) { "" } else { [string]$Value }
+    value = $valueString
     last_change_timestamp = [long]$LastChangeTimestamp
   }
 
@@ -136,7 +145,48 @@ class WaterlyConnectApiClient {
       $invokeParams.Proxy = $this.Proxy
     }
 
-    Invoke-RestMethod @invokeParams | Out-Null
+    try {
+      Invoke-RestMethod @invokeParams | Out-Null
+    } catch {
+      $statusCode = $null
+      $statusDescription = $null
+      $responseBody = $null
+
+      if ($_.Exception -and $_.Exception.Response) {
+        $response = $_.Exception.Response
+        if ($response -is [System.Net.Http.HttpResponseMessage]) {
+          $statusCode = [int]$response.StatusCode
+          $statusDescription = $response.ReasonPhrase
+          try {
+            $responseBody = $response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+          } catch {
+            $responseBody = $null
+          }
+        } elseif ($response -is [System.Net.WebResponse]) {
+          $statusCode = [int]$response.StatusCode
+          $statusDescription = $response.StatusDescription
+          try {
+            $reader = New-Object System.IO.StreamReader($response.GetResponseStream())
+            $responseBody = $reader.ReadToEnd()
+            $reader.Close()
+          } catch {
+            $responseBody = $null
+          }
+        }
+      }
+
+      $detail = if ($statusCode) {
+        if ([string]::IsNullOrWhiteSpace($responseBody)) {
+          "HTTP $statusCode $statusDescription"
+        } else {
+          "HTTP $statusCode $statusDescription: $responseBody"
+        }
+      } else {
+        $_.Exception.Message
+      }
+
+      throw "WaterlyConnect submission failed: $detail"
+    }
   }
 }
 
