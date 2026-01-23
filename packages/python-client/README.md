@@ -14,6 +14,11 @@ You will need 3 specific values provided by the Waterly team to proceed:
 
 - Python 3.8+
 
+### Supported Python Versions
+
+The client is implemented using the Python standard library and is supported on
+Python 3.8+.
+
 ---
 
 ## Installation
