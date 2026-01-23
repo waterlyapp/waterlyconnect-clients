@@ -1,5 +1,6 @@
+from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Dict, Mapping, Optional, Sequence, Union
+from typing import Any, Optional, Union
 import json
 import time
 from urllib import request, error
@@ -33,7 +34,7 @@ def _coerce_tag_datum(tag: Union["TagDatum", Mapping[str, Any]]) -> "TagDatum":
     raise TypeError("tags must be TagDatum instances or mappings")
 
 
-def _normalize_proxy(proxy: Union[str, Mapping[str, str]]) -> Dict[str, str]:
+def _normalize_proxy(proxy: Union[str, dict[str, str]]) -> dict[str, str]:
     if isinstance(proxy, str):
         return {"http": proxy, "https": proxy}
     return dict(proxy)
@@ -48,8 +49,8 @@ class ClientDeviceInfo:
     serial: Optional[str] = None
     uptime_millis: Optional[int] = None
 
-    def to_dict(self) -> Dict[str, Any]:
-        data: Dict[str, Any] = {
+    def to_dict(self) -> dict[str, Any]:
+        data: dict[str, Any] = {
             "id": self.id,
             "type": self.type,
         }
@@ -78,8 +79,8 @@ class TagDatum:
         self.value = _value_to_string(self.value)
         self.last_change_timestamp = int(self.last_change_timestamp)
 
-    def to_dict(self) -> Dict[str, Any]:
-        data: Dict[str, Any] = {
+    def to_dict(self) -> dict[str, Any]:
+        data: dict[str, Any] = {
             "name": self.name,
             "value": self.value,
             "last_change_timestamp": self.last_change_timestamp,
@@ -97,8 +98,8 @@ class TagDatum:
 class WaterlyConnectApiClientConfig:
     url: str
     client_token: str
-    client_device: Union[ClientDeviceInfo, Mapping[str, Any]]
-    proxy: Optional[Union[str, Mapping[str, str]]] = None
+    client_device: Union[ClientDeviceInfo, dict[str, Any]]
+    proxy: Optional[Union[str, dict[str, str]]] = None
 
     def __post_init__(self) -> None:
         self.client_device = _coerce_client_device(self.client_device)
@@ -117,7 +118,12 @@ class WaterlyConnectApiClient:
         if client_device is None:
             raise ValueError("client_device is required")
 
-        if not client_device.id or not client_device.type:
+        if (
+            not isinstance(client_device.id, str)
+            or not client_device.id.strip()
+            or not isinstance(client_device.type, str)
+            or not client_device.type.strip()
+        ):
             raise ValueError("client_device requires id and type")
 
         self.url = url
@@ -131,7 +137,7 @@ class WaterlyConnectApiClient:
             proxy_map = _normalize_proxy(self.proxy)
             self._opener = request.build_opener(request.ProxyHandler(proxy_map))
 
-    def submit_data(self, tags: Sequence[Union[TagDatum, Mapping[str, Any]]]) -> None:
+    def submit_data(self, tags: list[Union[TagDatum, dict[str, Any]]]) -> None:
         if tags is None:
             raise ValueError("tags is required")
 

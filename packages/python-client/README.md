@@ -12,12 +12,12 @@ You will need 3 specific values provided by the Waterly team to proceed:
 
 ## Prerequisites
 
-- Python 3.8+
+- Python 3.12+
 
 ### Supported Python Versions
 
 The client is implemented using the Python standard library and is supported on
-Python 3.8+.
+Python 3.12+.
 
 ---
 
